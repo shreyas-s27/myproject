@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>For Geet ❤️</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,400;1,700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            background: radial-gradient(circle, #ffffff 0%, #fce4ec 100%);
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+            text-align: center;
+            overflow: hidden;
+        }
+
+        .container {
+            position: relative;
+            z-index: 10;
+            padding: 20px;
+        }
+
+        .main-heart {
+            font-size: 60px;
+            color: #800020;
+            margin-bottom: 10px;
+            animation: pulse 1.5s infinite;
+            display: inline-block;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.15); }
+            100% { transform: scale(1); }
+        }
+
+        h1 {
+            color: #800020;
+            font-weight: 700;
+            font-size: 2.8rem;
+            margin-bottom: 60px;
+            letter-spacing: 1px;
+        }
+
+        .buttons {
+            display: flex;
+            gap: 40px;
+            justify-content: center;
+            align-items: center;
+            min-height: 100px;
+        }
+
+        button {
+            padding: 12px 50px;
+            font-size: 1.2rem;
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.1s ease;
+        }
+
+        #yesBtn {
+            background-color: #800020;
+            color: #f5e6be;
+            border: 1px solid #800020;
+            box-shadow: 0 4px 15px rgba(128, 0, 32, 0.2);
+        }
+
+        #yesBtn:hover { transform: scale(1.1); }
+
+        #noBtn {
+            background-color: white;
+            color: #888;
+            border: 1px solid #ddd;
+            position: absolute; 
+            z-index: 999;
+        }
+
+        #successMessage {
+            display: none;
+            color: #800020;
+            font-size: 1.8rem;
+            max-width: 80%;
+            margin: 0 auto;
+            line-height: 1.5;
+        }
+
+        .falling-heart {
+            position: absolute;
+            color: #800020;
+            top: -30px;
+            pointer-events: none;
+            animation: fall linear forwards;
+        }
+
+        @keyframes fall {
+            to { transform: translateY(110vh) rotate(360deg); }
+        }
+
+        /* Keep the player hidden but present */
+        #youtube-player {
+            position: absolute;
+            top: -9999px;
+            left: -9999px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="main-heart" id="topHeart">❤️</div>
+        <h1 id="question">Hey Geet, <br> will you be my Valentine?</h1>
+        
+        <div class="buttons" id="btnContainer">
+            <button id="yesBtn" onclick="showSuccess()">Yes</button>
+            <button id="noBtn" onmouseover="dodge()" onclick="dodge()">No</button>
+        </div>
+
+        <div id="successMessage">
+            You might be feeling honoured to have someone like me in your life. ❤️
+        </div>
+    </div>
+
+    <audio id="myAudio" src="song.webm" loop></audio>
+
+    <script>
+        document.getElementById('yesBtn').addEventListener('click', showSuccess);
+
+        function dodge() {
+            const noBtn = document.getElementById('noBtn');
+            const maxX = window.innerWidth - noBtn.offsetWidth - 100;
+            const maxY = window.innerHeight - noBtn.offsetHeight - 100;
+            const randomX = Math.max(50, Math.floor(Math.random() * maxX));
+            const randomY = Math.max(50, Math.floor(Math.random() * maxY));
+            noBtn.style.left = randomX + 'px';
+            noBtn.style.top = randomY + 'px';
+        }
+
+        function createFallingHeart() {
+            const h = document.createElement('div');
+            h.classList.add('falling-heart');
+            h.innerHTML = '❤️'; 
+            h.style.left = Math.random() * 100 + 'vw';
+            h.style.fontSize = (Math.random() * 20 + 15) + 'px';
+            h.style.animationDuration = (Math.random() * 2 + 2) + 's';
+            h.style.opacity = Math.random();
+            document.body.appendChild(h);
+            setTimeout(() => h.remove(), 4000);
+        }
+
+        function showSuccess() {
+            // Update UI
+            document.getElementById('question').style.display = 'none';
+            document.getElementById('btnContainer').style.display = 'none';
+            document.getElementById('successMessage').style.display = 'block';
+            
+            // Start animations
+            setInterval(createFallingHeart, 150);
+
+            // Play the local audio file
+            const audio = document.getElementById('myAudio');
+            const playPromise = audio.play();
+
+            if (playPromise !== undefined) {
+                playPromise.catch(error => {
+                    console.error("Audio playback failed:", error);
+                    // This might happen if the browser still blocks it, though less likely with local files.
+                });
+            }
+        }
+    </script>
+</body>
+</html>
